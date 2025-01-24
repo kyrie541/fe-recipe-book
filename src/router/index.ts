@@ -1,23 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
+import { useAuthStore } from '../stores/auth'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
+import RecipeList from '../views/RecipeList.vue'
+import PublicRecipeList from '../views/PublicRecipeList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'login',
+      component: Login,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/register',
+      name: 'register',
+      component: Register,
+    },
+    {
+      path: '/recipes',
+      name: 'recipes',
+      component: RecipeList,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/public-recipes',
+      name: 'public-recipes',
+      component: PublicRecipeList,
+      meta: { requiresAuth: true },
     },
   ],
+})
+
+// Navigation guard for private routes
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/') // Redirect to login if not authenticated
+  } else {
+    next() // Allow navigation
+  }
 })
 
 export default router

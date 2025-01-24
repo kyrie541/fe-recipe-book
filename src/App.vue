@@ -1,85 +1,48 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView, useRouter } from 'vue-router'
+
+import { useAuthStore } from './stores/auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const handleSelect = (key: string, keyPath: string[]) => {
+  // redirect with vue-router by using switch case
+  if (key == '1') {
+    router.push({ path: '/' })
+  } else if (key == '2') {
+    router.push({ path: '/register' })
+  } else if (key == '3') {
+    router.push({ path: '/recipes' })
+  } else if (key == '4') {
+    router.push({ path: '/public-recipes' })
+  } else if (key == '5') {
+    authStore.logout()
+    router.push({ path: '/' })
+  }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <el-container>
+    <el-header>
+      <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect">
+        <el-menu-item index="0">Recipe Cookbook</el-menu-item>
+        <el-menu-item v-if="!authStore.isAuthenticated" index="1"> Login </el-menu-item>
+        <el-menu-item v-if="!authStore.isAuthenticated" index="2"> Register </el-menu-item>
+        <el-menu-item v-if="authStore.isAuthenticated" index="3"> Your Cookbook </el-menu-item>
+        <el-menu-item v-if="authStore.isAuthenticated" index="4"> Public Recipes </el-menu-item>
+        <el-menu-item v-if="authStore.isAuthenticated" index="5"> Logout </el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <RouterView />
+    </el-main>
+  </el-container>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+<style>
+.el-menu--horizontal > .el-menu-item:nth-child(1) {
+  margin-right: auto;
 }
 </style>
