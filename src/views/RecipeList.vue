@@ -27,8 +27,6 @@
                 :src="scope.row.image"
               />
             </div>
-            <!-- <div>Title: {{ scope.row.title }}</div>
-            <div>Description: {{ scope.row.description }}</div> -->
           </template>
           <template #reference>
             <el-tag>{{ scope.row.title }}</el-tag>
@@ -43,7 +41,12 @@
       </template>
     </el-table-column>
   </el-table>
-  <el-pagination layout="prev, pager, next" :total="80" />
+  <el-pagination
+    layout="prev, pager, next"
+    :total="totalRecipes"
+    :default-page-size="pageSize"
+    @change="handlePageChange"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -67,21 +70,33 @@ interface Recipe {
 }
 
 const tableData = ref<Recipe[]>([])
+const totalRecipes = ref<number>(0)
 
 const authToken = localStorage.getItem('token')
 
 onMounted(async () => {
+  fetchRecipes(1)
+})
+
+const pageSize = 10
+
+const fetchRecipes = async (page: number) => {
   try {
-    const response = await axios.get(`${config.API_URL}/recipes`, {
+    const response = await axios.get(`${config.API_URL}/recipes?limit=${pageSize}&page=${page}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     })
     tableData.value = response.data.recipes
+    totalRecipes.value = response.data.total
   } catch (error) {
     ElMessage.error('Something went wrong, please try again later')
   }
-})
+}
+
+const handlePageChange = (currentPage: number, pageSize: number) => {
+  fetchRecipes(currentPage)
+}
 
 const handleCreate = () => {
   router.push('recipe-form')
