@@ -27,8 +27,19 @@
         <el-input v-model="ruleForm.ingredients" />
       </el-form-item>
 
-      <el-form-item label="Title" prop="image">
-        <el-input v-model="ruleForm.image" />
+      <el-form-item label="Image" prop="image">
+        <el-upload
+          ref="upload"
+          :auto-upload="false"
+          :limit="1"
+          :on-exceed="handleExceed"
+          accept="image/*"
+          @change="handleFileChange"
+          :file-list="fileList"
+          list-type="picture-card"
+        >
+          <el-button type="primary">Select File</el-button>
+        </el-upload>
       </el-form-item>
 
       <el-form-item>
@@ -43,9 +54,15 @@
 
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type {
+  FormInstance,
+  FormRules,
+  UploadInstance,
+  UploadProps,
+  UploadRawFile,
+} from 'element-plus'
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { ElMessage, genFileId } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 
 import config from '../config'
@@ -55,8 +72,10 @@ interface RuleForm {
   description: string
   ingredients: string
   steps: string
-  image: string
+  image: UploadRawFile | undefined | null
 }
+const upload = ref<UploadInstance>()
+const fileList = reactive<any[]>([])
 
 const router = useRouter()
 const route = useRoute()
@@ -70,7 +89,7 @@ const ruleForm = reactive<RuleForm>({
   description: '',
   ingredients: '',
   steps: '',
-  image: '',
+  image: undefined,
 })
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -99,12 +118,27 @@ onMounted(async () => {
       ruleForm.description = description
       ruleForm.steps = steps
       ruleForm.ingredients = ingredients
-      ruleForm.image = image
+      if (image) {
+        fileList.push({
+          url: image, // S3 URL
+        })
+      }
     } catch (error) {
       ElMessage.error('Something went wrong, please try again later')
     }
   }
 })
+
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value!.handleStart(file)
+}
+
+const handleFileChange: UploadProps['onChange'] = (file) => {
+  ruleForm.image = file.raw
+}
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return

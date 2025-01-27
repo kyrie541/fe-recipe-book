@@ -13,7 +13,10 @@
         <el-input v-model="registerForm.email" />
       </el-form-item>
       <el-form-item label="Password" prop="password">
-        <el-input v-model="registerForm.password" type="password" />
+        <el-input v-model="registerForm.password" type="password" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="Confirm Password" prop="confirmPassword">
+        <el-input v-model="registerForm.confirmPassword" type="password" autocomplete="off" />
       </el-form-item>
       <el-form-item>
         <el-button class="submit-button" type="primary" @click="submitForm(registerFormRef)">
@@ -37,6 +40,7 @@ import { useAuthStore } from '../stores/auth'
 interface RegisterForm {
   email: string
   password: string
+  confirmPassword: string
 }
 
 const router = useRouter()
@@ -47,10 +51,28 @@ const registerFormRef = ref<FormInstance>()
 const registerForm = reactive<RegisterForm>({
   email: '',
   password: '',
+  confirmPassword: '',
 })
 
+const customValidation = (_: any, value: string, callback: Function) => {
+  if (value === '') {
+    callback(new Error('Please input the password again'))
+  } else if (value !== registerForm.password) {
+    callback(new Error("Two inputs don't match!"))
+  } else {
+    callback()
+  }
+}
+
 const rules = reactive<FormRules<RegisterForm>>({
-  email: [{ required: true, message: 'Please input email', trigger: 'blur' }],
+  email: [
+    { required: true, message: 'Please input email', trigger: 'blur' },
+    {
+      type: 'email',
+      message: 'Please input correct email address',
+      trigger: ['blur', 'change'],
+    },
+  ],
   password: [
     {
       required: true,
@@ -58,6 +80,7 @@ const rules = reactive<FormRules<RegisterForm>>({
       trigger: 'blur',
     },
   ],
+  confirmPassword: [{ validator: customValidation, trigger: 'blur' }],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
