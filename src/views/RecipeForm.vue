@@ -7,7 +7,7 @@
       :rules="rules"
       label-position="left"
       label-width="auto"
-      class="demo-ruleForm"
+      class="recipe-form-box"
       size="large"
       status-icon
     >
@@ -16,15 +16,27 @@
       </el-form-item>
 
       <el-form-item label="Description" prop="description">
-        <el-input v-model="ruleForm.description" />
+        <el-input 
+          v-model="ruleForm.description"     
+          :rows="5"
+          type="textarea" 
+        />
       </el-form-item>
 
       <el-form-item label="Steps" prop="steps">
-        <el-input v-model="ruleForm.steps" />
+        <el-input 
+          v-model="ruleForm.steps" 
+          :rows="5"
+          type="textarea"
+        />
       </el-form-item>
 
       <el-form-item label="Ingredients" prop="ingredients">
-        <el-input v-model="ruleForm.ingredients" />
+        <el-input 
+          v-model="ruleForm.ingredients"           
+          :rows="5"
+          type="textarea"
+        />
       </el-form-item>
 
       <el-form-item label="Image" prop="image">
@@ -205,5 +217,9 @@ const updateRecipe = () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.recipe-form-box {
+  width: 80%
 }
 </style>

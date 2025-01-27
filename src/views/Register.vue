@@ -13,10 +13,20 @@
         <el-input v-model="registerForm.email" />
       </el-form-item>
       <el-form-item label="Password" prop="password">
-        <el-input v-model="registerForm.password" type="password" autocomplete="off" />
+        <el-input
+          v-model="registerForm.password"
+          type="password"
+          autocomplete="off"
+          show-password
+        />
       </el-form-item>
       <el-form-item label="Confirm Password" prop="confirmPassword">
-        <el-input v-model="registerForm.confirmPassword" type="password" autocomplete="off" />
+        <el-input
+          v-model="registerForm.confirmPassword"
+          type="password"
+          autocomplete="off"
+          show-password
+        />
       </el-form-item>
       <el-form-item>
         <el-button class="submit-button" type="primary" @click="submitForm(registerFormRef)">
@@ -78,6 +88,12 @@ const rules = reactive<FormRules<RegisterForm>>({
       required: true,
       message: 'Please input password',
       trigger: 'blur',
+    },
+    {
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+      message:
+        'At least 8 characters long. At least 1 lowercase letter. At least 1 uppercase letter. At least 1 number. At least 1 symbol (special character).',
+      trigger: ['blur', 'change'],
     },
   ],
   confirmPassword: [{ validator: customValidation, trigger: 'blur' }],

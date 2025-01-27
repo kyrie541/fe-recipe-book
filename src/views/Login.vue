@@ -13,7 +13,7 @@
         <el-input v-model="loginForm.email" />
       </el-form-item>
       <el-form-item label="Password" prop="password">
-        <el-input v-model="loginForm.password" type="password" />
+        <el-input v-model="loginForm.password" type="password" show-password/>
       </el-form-item>
       <el-form-item>
         <el-button class="submit-button" type="primary" @click="submitForm(loginFormRef)">
