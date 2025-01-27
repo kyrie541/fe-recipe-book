@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import RecipeList from '../views/RecipeList.vue'
 import PublicRecipeList from '../views/PublicRecipeList.vue'
+import RecipeForm from '../views/RecipeForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,12 @@ const router = createRouter({
       path: '/recipes',
       name: 'recipes',
       component: RecipeList,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/recipe-form',
+      name: 'recipe-form',
+      component: RecipeForm,
       meta: { requiresAuth: true },
     },
     {
