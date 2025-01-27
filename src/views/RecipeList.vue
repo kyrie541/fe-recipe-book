@@ -16,8 +16,19 @@
       <template #default="scope">
         <el-popover effect="light" trigger="hover" placement="top" width="auto">
           <template #default>
-            <div>Title: {{ scope.row.title }}</div>
-            <div>Description: {{ scope.row.description }}</div>
+            <div class="recipe-details-popover">
+              <div>Title: {{ scope.row.title }}</div>
+              <div>Description: {{ scope.row.description }}</div>
+              <div>Ingredients: {{ scope.row.ingredients }}</div>
+              <div>Steps: {{ scope.row.steps }}</div>
+              <el-image
+                v-if="scope.row.image"
+                style="width: 100px; height: 100px"
+                :src="scope.row.image"
+              />
+            </div>
+            <!-- <div>Title: {{ scope.row.title }}</div>
+            <div>Description: {{ scope.row.description }}</div> -->
           </template>
           <template #reference>
             <el-tag>{{ scope.row.title }}</el-tag>
@@ -46,7 +57,7 @@ import config from '../config'
 
 const router = useRouter()
 
-interface Recipes {
+interface Recipe {
   id: number
   title: string
   description: string
@@ -55,7 +66,7 @@ interface Recipes {
   image: string
 }
 
-const tableData = ref<Recipes[]>([])
+const tableData = ref<Recipe[]>([])
 
 const authToken = localStorage.getItem('token')
 
@@ -76,10 +87,10 @@ const handleCreate = () => {
   router.push('recipe-form')
 }
 
-const handleEdit = (row: Recipes) => {
+const handleEdit = (row: Recipe) => {
   router.push({ name: 'recipe-form', query: { id: row.id } })
 }
-const handleDelete = (row: Recipes) => {
+const handleDelete = (row: Recipe) => {
   ElMessageBox.confirm(`Are you sure to delete ${row.title}?`, 'Confirm', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
@@ -112,3 +123,9 @@ const handleDelete = (row: Recipes) => {
     })
 }
 </script>
+
+<style scoped>
+.recipe-details-popover > * {
+  margin-bottom: 10px;
+}
+</style>
