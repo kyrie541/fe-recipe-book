@@ -16,27 +16,15 @@
       </el-form-item>
 
       <el-form-item label="Description" prop="description">
-        <el-input 
-          v-model="ruleForm.description"     
-          :rows="5"
-          type="textarea" 
-        />
+        <el-input v-model="ruleForm.description" :rows="5" type="textarea" />
       </el-form-item>
 
       <el-form-item label="Steps" prop="steps">
-        <el-input 
-          v-model="ruleForm.steps" 
-          :rows="5"
-          type="textarea"
-        />
+        <el-input v-model="ruleForm.steps" :rows="5" type="textarea" />
       </el-form-item>
 
       <el-form-item label="Ingredients" prop="ingredients">
-        <el-input 
-          v-model="ruleForm.ingredients"           
-          :rows="5"
-          type="textarea"
-        />
+        <el-input v-model="ruleForm.ingredients" :rows="5" type="textarea" />
       </el-form-item>
 
       <el-form-item label="Image" prop="image">
@@ -54,8 +42,8 @@
         </el-upload>
       </el-form-item>
 
-      <el-form-item>
-        <el-button class="submit-button" type="primary" @click="submitForm(ruleFormRef)">
+      <el-form-item class="button-group">
+        <el-button type="primary" @click="submitForm(ruleFormRef)">
           {{ formMode == 'create' ? 'Create' : 'Update' }}
         </el-button>
         <el-button @click="router.go(-1)">Back</el-button>
@@ -207,9 +195,8 @@ const updateRecipe = () => {
 </script>
 
 <style scoped>
-.submit-button {
-  margin: 0 auto;
-  display: block;
+.button-group >>> .el-form-item__content {
+  justify-content: flex-end;
 }
 
 .recipe-form-container {
@@ -220,6 +207,6 @@ const updateRecipe = () => {
 }
 
 .recipe-form-box {
-  width: 80%
+  width: 80%;
 }
 </style>

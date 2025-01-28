@@ -1,10 +1,26 @@
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 import { useAuthStore } from './stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
+
+const isTablet = ref(false)
+
+const updateScreenSize = () => {
+  isTablet.value = window.innerWidth <= 1024
+}
+
+onMounted(() => {
+  updateScreenSize()
+  window.addEventListener('resize', updateScreenSize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateScreenSize)
+})
 
 const handleSelect = (key: string, keyPath: string[]) => {
   // redirect with vue-router by using switch case
@@ -26,7 +42,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
 <template>
   <el-container>
     <el-header>
-      <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false" @select="handleSelect">
+      <el-menu
+        class="el-menu-demo"
+        mode="horizontal"
+        @select="handleSelect"
+        :ellipsis="isTablet"
+        menu-trigger="click"
+      >
         <el-menu-item index="0">Recipe Cookbook</el-menu-item>
         <el-menu-item v-if="!authStore.isAuthenticated" index="1"> Login </el-menu-item>
         <el-menu-item v-if="!authStore.isAuthenticated" index="2"> Register </el-menu-item>

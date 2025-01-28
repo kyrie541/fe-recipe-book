@@ -2,7 +2,7 @@
   <el-button @click="handleCreate" type="primary">Create new Recipe</el-button>
   <el-divider />
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column label="Created Date">
+    <el-table-column label="Created Date" width="250">
       <template #default="scope">
         <div style="display: flex; align-items: center">
           <el-icon><timer /></el-icon>
@@ -12,7 +12,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="Recipe Title">
+    <el-table-column label="Recipe Title" width="500">
       <template #default="scope">
         <el-popover effect="light" trigger="hover" placement="top" width="auto">
           <template #default>
@@ -34,7 +34,7 @@
         </el-popover>
       </template>
     </el-table-column>
-    <el-table-column label="Actions">
+    <el-table-column label="Actions" width="300">
       <template #default="scope">
         <el-button size="small" @click="handleEdit(scope.row)"> Edit </el-button>
         <el-button size="small" type="danger" @click="handleDelete(scope.row)"> Delete </el-button>
